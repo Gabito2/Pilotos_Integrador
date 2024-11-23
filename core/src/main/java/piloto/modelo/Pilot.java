@@ -26,12 +26,12 @@ public class Pilot {
                                        String fullName,
                                        String shortName,
                                        String pictureUrl) throws ExceptionPilot {
-        if (uuid == null || name == null || surname == null || fullName == null || shortName == null || pictureUrl == null) {
-            throw new ExceptionPilot("Error, datos del piloto nulos ...");
-        }
-        if (name.isEmpty() || surname.isEmpty() || fullName.isEmpty() || shortName.isEmpty()) {
-            throw new ExceptionPilot("Error, datos del piloto vacios ...");
-        }
+//        if (uuid == null || name == null || surname == null || fullName == null || shortName == null || pictureUrl == null) {
+//            throw new ExceptionPilot("Error, datos del piloto nulos ...");
+//        }
+//        if (name.isEmpty() || surname.isEmpty() || fullName.isEmpty() || shortName.isEmpty()) {
+//            throw new ExceptionPilot("Error, datos del piloto vacios ...");
+//        }
 
         return new Pilot(uuid, name, surname, fullName, shortName, pictureUrl);
     }

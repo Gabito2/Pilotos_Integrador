@@ -20,11 +20,8 @@ public class F1Service {
         this.restTemplate = restTemplate;
     }
     public List<PilotDTO> getPilotos() {
-        // Bloqueamos para esperar el resultado de la llamada asíncrona
-        // La URL de la API que deseas consultar
         String url = "https://api.openf1.org/v1/drivers";
 
-        // Realizamos la solicitud GET y deserializamos la respuesta JSON en una lista de PilotoResponse
         ResponseEntity<List<PilotDTO>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -32,7 +29,7 @@ public class F1Service {
                 new ParameterizedTypeReference<List<PilotDTO>>() {}
         );
 
-        return response.getBody();  // Retorna la lista de pilotos
+        return response.getBody();
     }
 
 }

@@ -33,7 +33,6 @@ public class CreateCourseServiceTest {
 
     @Test
     public void createCourse_courseSaver_Return201() throws Exception {
-        // Arrange
         Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url");
         List<PilotDTO> mockPilotList = new ArrayList<>();
         mockPilotList.add(new PilotDTO(null, null, "Colapinto Franco", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
@@ -41,42 +40,36 @@ public class CreateCourseServiceTest {
         when(f1Service.getPilotos()).thenReturn(mockPilotList);
         when(createPilotInput.createPilot(any(Pilot.class))).thenReturn(pilot);
 
-        // Act
         ResponseEntity<?> result = pilotController.saveUpdate();
 
-        // Assert
         Assertions.assertEquals(HttpStatus.CREATED, result.getStatusCode());
     }
 
     @Test
-    public void createCourse_courseExists_Return400() throws Exception {
-        // Arrange
+    public void createCourse_courseExists_Return207() throws Exception {
         List<PilotDTO> mockPilotList = new ArrayList<>();
-        mockPilotList.add(new PilotDTO(null, null, "Colapinto Franco", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
-        mockPilotList.add(new PilotDTO(null, null, "Colapinto Franco", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
+        mockPilotList.add(new PilotDTO(null, null, "Franco Colapinto", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
+        mockPilotList.add(new PilotDTO(null, null, "Franco Colapinto", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
 
         when(f1Service.getPilotos()).thenReturn(mockPilotList);
 
-        // Act
         ResponseEntity<?> result = pilotController.saveUpdate();
 
-        // Assert
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+        Assertions.assertEquals(207, result.getStatusCodeValue()); // Verifica el estado HTTP
+        Assertions.assertTrue(result.getBody().toString().contains("Error: Piloto duplicado encontrado (COL).")); // Verifica el mensaje de error
     }
+
 
     @Test
     public void createCourse_courseNoSaved_Return500() throws Exception {
-        // Arrange
         List<PilotDTO> mockPilotList = new ArrayList<>();
         mockPilotList.add(new PilotDTO(null, null, "Colapinto Franco", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
 
         when(f1Service.getPilotos()).thenReturn(mockPilotList);
         when(createPilotInput.createPilot(any(Pilot.class))).thenThrow(new RuntimeException("Error al guardar el piloto"));
 
-        // Act
         ResponseEntity<?> result = pilotController.saveUpdate();
 
-        // Assert
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
     }
 }

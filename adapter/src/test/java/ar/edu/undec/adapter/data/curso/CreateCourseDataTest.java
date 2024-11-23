@@ -12,10 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import piloto.exceptions.ExceptionPilot;
 import piloto.modelo.Pilot;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -30,16 +28,13 @@ public class CreateCourseDataTest {
 
     @Test
     public void saveCourse_Course_Successful() {
-        // Arrange
         Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url");
 
         when(pilotRepository.save(org.mockito.ArgumentMatchers.any(PilotData.class)))
                 .thenReturn(new PilotData());
 
-        // Act
         Pilot result = createPilotRepository.createPiloto(pilot);
 
-        // Assert
         Assertions.assertTrue(result instanceof Pilot);
     }
 
