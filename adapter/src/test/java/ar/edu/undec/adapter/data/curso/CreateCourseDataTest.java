@@ -26,18 +26,17 @@ public class CreateCourseDataTest {
     PilotRepository pilotRepository;
 
     @InjectMocks
-    CreatePilotRepository createPilotRepository;  // Reemplazar con el correcto nombre de tu repositorio
+    CreatePilotRepository createPilotRepository;
 
     @Test
     public void saveCourse_Course_Successful() {
-        // Arrange: Crea un piloto de prueba
+        // Arrange
         Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url");
 
-        // Simula que la operación de guardado es exitosa
         when(pilotRepository.save(org.mockito.ArgumentMatchers.any(PilotData.class)))
                 .thenReturn(new PilotData());
 
-        // Act: Verifica el resultado de la creación del piloto
+        // Act
         Pilot result = createPilotRepository.createPiloto(pilot);
 
         // Assert
@@ -47,19 +46,16 @@ public class CreateCourseDataTest {
 
     @Test
     public void saveCourse_Course_returnFalse() {
-        // Crea un piloto de prueba
+
         Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url");
 
-        // Simula que el repositorio lanza una excepción al intentar guardar
         doThrow(new ExceptionPilot("Error al guardar piloto"))
                 .when(pilotRepository).save(org.mockito.ArgumentMatchers.any(PilotData.class));
 
-        // Ejecuta el método y maneja la excepción
         Exception exception = Assertions.assertThrows(ExceptionPilot.class, () -> {
             createPilotRepository.createPiloto(pilot);
         });
 
-        // Verifica el mensaje de la excepción
         Assertions.assertEquals("Error al guardar piloto", exception.getMessage());
     }
 
