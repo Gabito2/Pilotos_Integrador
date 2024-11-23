@@ -30,27 +30,38 @@ public class CreateCourseDataTest {
 
     @Test
     public void saveCourse_Course_Successful() {
-        // Crea un curso de prueba
-        Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colpainto Franco", "COL", "url");
+        // Arrange: Crea un piloto de prueba
+        Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url");
 
         // Simula que la operación de guardado es exitosa
-        when(pilotRepository.save(any(PilotData))).thenReturn(new PilotData());
+        when(pilotRepository.save(org.mockito.ArgumentMatchers.any(PilotData.class)))
+                .thenReturn(new PilotData());
 
-        // Verifica el resultado de la creación del curso
+        // Act: Verifica el resultado de la creación del piloto
         Pilot result = createPilotRepository.createPiloto(pilot);
+
+        // Assert
         Assertions.assertTrue(result instanceof Pilot);
     }
 
+
     @Test
     public void saveCourse_Course_returnFalse() {
-        // Crea un curso de prueba
-        Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colpainto Franco", "COL", "url");
+        // Crea un piloto de prueba
+        Pilot pilot = Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url");
 
-        // Simula que la operación de guardado lanza una excepción
-        when(pilotRepository.save(any(PilotData.class))).thenThrow(ExceptionPilot.class);
-        // Verifica que la creación del curso retorna false en caso de error
-//        boolean result = createPilotRepository.createCourse(course);
-        Pilot result = createPilotRepository.createPiloto(pilot);
-        Assertions.assertFalse(result instanceof Pilot);
+        // Simula que el repositorio lanza una excepción al intentar guardar
+        doThrow(new ExceptionPilot("Error al guardar piloto"))
+                .when(pilotRepository).save(org.mockito.ArgumentMatchers.any(PilotData.class));
+
+        // Ejecuta el método y maneja la excepción
+        Exception exception = Assertions.assertThrows(ExceptionPilot.class, () -> {
+            createPilotRepository.createPiloto(pilot);
+        });
+
+        // Verifica el mensaje de la excepción
+        Assertions.assertEquals("Error al guardar piloto", exception.getMessage());
     }
+
+
 }

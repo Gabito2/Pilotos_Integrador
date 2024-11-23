@@ -1,5 +1,7 @@
 package org.example.servicios.domain;
 
+import java.util.UUID;
+
 public class PilotDTO {
     private String driver_number;
     private String broadcast_name;

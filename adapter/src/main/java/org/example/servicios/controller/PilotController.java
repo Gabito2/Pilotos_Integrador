@@ -32,34 +32,44 @@ public class PilotController {
     }
 
     @GetMapping
-    public ResponseEntity<?> saveUpdate()  {
-        Set<String> nombresRegistrados = new HashSet<>();
-        List <PilotDTO> pilotDTOS = f1Service.getPilotos();
-        for (PilotDTO pilotDTO : pilotDTOS) {
-            String short_name = pilotDTO.getName_acronym();
+    public ResponseEntity<?> saveUpdate() {
+        try {
+            // Lista de pilotos obtenida desde el servicio
+            List<PilotDTO> pilotDTOS = f1Service.getPilotos();
 
-            // Verificamos si el nombre ya ha sido registrado
-            if (!nombresRegistrados.contains(short_name)) {
-                // Si no está registrado, lo agregamos al Set y lo registramos
-                if (pilotDTO.getFirst_name() != null && pilotDTO.getLast_name() != null && pilotDTO.getLast_name() != null && pilotDTO.getName_acronym() != null && pilotDTO.getHeadshot_url() != null) {
-                    nombresRegistrados.add(short_name);
+            // Validar duplicados
+            Set<String> nombresRegistrados = new HashSet<>();
+            for (PilotDTO pilotDTO : pilotDTOS) {
+                String short_name = pilotDTO.getName_acronym();
 
-                    // Registrar el piloto (puedes incluir más campos si lo necesitas)
+                // Si ya existe un nombre corto duplicado, devolvemos un error
+                if (nombresRegistrados.contains(short_name)) {
+                    return ResponseEntity.badRequest().body("Pilotos duplicados encontrados: " + short_name);
+                }
+
+                nombresRegistrados.add(short_name);
+            }
+
+            // Crear pilotos si no hay duplicados
+            for (PilotDTO pilotDTO : pilotDTOS) {
+                if (pilotDTO.getFirst_name() != null && pilotDTO.getLast_name() != null && pilotDTO.getFull_name() != null &&
+                        pilotDTO.getName_acronym() != null && pilotDTO.getHeadshot_url() != null) {
                     createPilotInput.createPilot(
                             Pilot.InstanciaPilot(UUID.randomUUID(),
                                     pilotDTO.getFirst_name(),
                                     pilotDTO.getLast_name(),
                                     pilotDTO.getFull_name(),
-                                    short_name,
+                                    pilotDTO.getName_acronym(),
                                     pilotDTO.getHeadshot_url())
                     );
                 }
-
             }
 
+            return ResponseEntity.created(null).body("Pilotos creados exitosamente.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al registrar pilotos: " + e.getMessage());
         }
-        return ResponseEntity.created(null).body("SE CREARON");
-
     }
+
 }
 
