@@ -2,6 +2,7 @@ package org.example.servicios.controller;
 
 import org.example.data.util.F1Service;
 import org.example.servicios.domain.PilotDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import piloto.input.CreatePilotInput;
@@ -11,7 +12,7 @@ import piloto.modelo.Pilot;
 import java.util.*;
 
 @RestController
-@RequestMapping(path = "drivers")
+@RequestMapping(path = "api/v1/")
 public class PilotController {
 
     private final CreatePilotInput createPilotInput;
@@ -24,12 +25,12 @@ public class PilotController {
         this.f1Service = f1Service;
     }
 
-    @GetMapping("/listar")
+    @GetMapping("piltos")
     public ArrayList<Pilot> getPilots() {
         return searchPilotInput.getPilots();
     }
 
-    @GetMapping
+    @PostMapping("cargar")
     public ResponseEntity<?> saveUpdate() {
         Set<String> nombresRegistrados = new HashSet<>();
         List<PilotDTO> pilotDTOS = f1Service.getPilotos();
@@ -38,7 +39,6 @@ public class PilotController {
         for (PilotDTO pilotDTO : pilotDTOS) {
             String shortName = pilotDTO.getName_acronym();
 
-            // Validar campos nulos o vacíos
             if (pilotDTO.getFirst_name() == null || pilotDTO.getLast_name() == null ||
                     pilotDTO.getFull_name() == null || shortName == null ||
                     pilotDTO.getHeadshot_url() == null ||
@@ -46,14 +46,12 @@ public class PilotController {
                     pilotDTO.getFull_name().isEmpty() || shortName.isEmpty() ||
                     pilotDTO.getHeadshot_url().isEmpty()) {
 
-                errores.add("Error: Datos incompletos para el piloto " + pilotDTO.getFull_name());
-                continue; // Saltar este piloto y continuar con el siguiente
+                continue;
             }
 
-            // Validar duplicados
             if (nombresRegistrados.contains(shortName)) {
                 errores.add("Error: Piloto duplicado encontrado (" + shortName + ").");
-                continue; // Saltar este piloto y continuar con el siguiente
+                continue;
             }
 
             // Registrar piloto
@@ -68,13 +66,9 @@ public class PilotController {
             );
         }
 
-        // Construir respuesta final
-        if (!errores.isEmpty()) {
-            return ResponseEntity.status(207).body("Pilotos registrados con errores: \n" + String.join("\n", errores));
-        }
+        if(!errores.isEmpty())
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error al cargar los pilotos.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Pilotos cargados correctamente.");
 
-        return ResponseEntity.status(201).body("Se guardaron todos los pilotos correctamente.");
     }
-
-
 }

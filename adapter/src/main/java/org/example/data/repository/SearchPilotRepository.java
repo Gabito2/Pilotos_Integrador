@@ -26,17 +26,17 @@ public class SearchPilotRepository implements SearchPilotOutPut {
     }
 
     @Override
-    public ArrayList<Pilot> searchPilotByName() {
-        return null;
+    public ArrayList<Pilot> searchPilotByName(String name) {
+        return pilotRepository.findAll().stream().map(Mapper::fromData).filter(pilot -> pilot.getName().equals(name)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public ArrayList<Pilot> searchPilotByShort_name() {
-        return null;
+    public ArrayList<Pilot> searchPilotByShortName(String shortName) {
+        return pilotRepository.findAll().stream().map(Mapper::fromData).filter(pilot -> pilot.getShortName().equals(shortName)).collect(Collectors.toCollection(ArrayList::new));   
     }
 
     @Override
-    public ArrayList<Pilot> searchPilotByFull_name() {
-        return null;
+    public ArrayList<Pilot> searchPilotByFullName(String fullName) {
+        return pilotRepository.findAll().stream().map(Mapper::fromData).filter(pilot -> pilot.getFullName().equals(fullName)).collect(Collectors.toCollection(ArrayList::new));
     }
 }

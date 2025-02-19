@@ -22,7 +22,7 @@ public class CreatePilotRepository implements CreatePilotOutPut {
 
     @Override
     public boolean existPilotByFullName(String fullName) {
-        return false;
+        return pilotRepository.existsPilotByFullName(fullName);
     }
 
     @Override

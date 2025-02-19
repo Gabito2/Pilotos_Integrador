@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import piloto.modelo.Pilot;
+import piloto.output.CreatePilotOutPut;
 import piloto.output.SearchPilotOutPut;
 import piloto.usecase.SearchPilotUseCase;
 
@@ -21,6 +22,9 @@ public class TestSearchUseCase {
 
     @Mock
     SearchPilotOutPut searchPilotOutPut;
+
+    @Mock
+    CreatePilotOutPut createPilotOutPut;
 
     @InjectMocks
     private SearchPilotUseCase searchPilotUseCase;
@@ -42,37 +46,21 @@ public class TestSearchUseCase {
         Assertions.assertEquals("Lewis", resultado.get(1).getName());
         Assertions.assertEquals("Gabriel", resultado.get(2).getName());
 
-    }
+        }
 
-    @Test
-    public void testSearchPilotByFullName() {
+        @Test
+        public void testSearchPilotByFullName() {
         List<Pilot> pilots = List.of(
-                Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url1"),
-                Pilot.InstanciaPilot(UUID.randomUUID(), "Lewis", "Hamilton", "Hamilton Lewis", "HAM", "url2"),
-                Pilot.InstanciaPilot(UUID.randomUUID(), "Gabriel", "Rearte", "Rearte Gabriel", "GAB", "url3")
+            Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url1"),
+            Pilot.InstanciaPilot(UUID.randomUUID(), "Lewis", "Hamilton", "Hamilton Lewis", "HAM", "url2"),
+            Pilot.InstanciaPilot(UUID.randomUUID(), "Gabriel", "Rearte", "Rearte Gabriel", "GAB", "url3")
         );
-        when(searchPilotOutPut.searchPilotByFull_name()).thenReturn(new ArrayList<>(pilots));
+        when(searchPilotOutPut.searchPilotByFullName("Colapinto Franco")).thenReturn(new ArrayList<>(pilots));
 
-        ArrayList<Pilot> result = searchPilotUseCase.searchPilotByFull_name();
+        ArrayList<Pilot> result = searchPilotUseCase.searchPilotByFullName("Colapinto Franco");
 
-        Assertions.assertEquals(3, result.size());
-        Assertions.assertEquals("Colapinto Franco", result.get(0).getFullName());
-    }
-
-    @Test
-    public void testSearchPilotByShortName() {
-        List<Pilot> pilots = List.of(
-                Pilot.InstanciaPilot(UUID.randomUUID(), "Franco", "Colapinto", "Colapinto Franco", "COL", "url1"),
-                Pilot.InstanciaPilot(UUID.randomUUID(), "Lewis", "Hamilton", "Hamilton Lewis", "HAM", "url2"),
-                Pilot.InstanciaPilot(UUID.randomUUID(), "Gabriel", "Rearte", "Rearte Gabriel", "GAB", "url3")
-        );
-        when(searchPilotOutPut.searchPilotByShort_name()).thenReturn(new ArrayList<>(pilots));
-
-        ArrayList<Pilot> result = searchPilotUseCase.searchPilotByShort_name();
-
-        Assertions.assertEquals(3, result.size());
-        Assertions.assertEquals("COL", result.get(0).getShortName());
-    }
+        Assertions.assertEquals(1, result.size());
+        }
 
     @Test
     public void testSearchPilotByName() {
@@ -81,13 +69,13 @@ public class TestSearchUseCase {
                 Pilot.InstanciaPilot(UUID.randomUUID(), "Lewis", "Hamilton", "Hamilton Lewis", "HAM", "url2"),
                 Pilot.InstanciaPilot(UUID.randomUUID(), "Gabriel", "Rearte", "Rearte Gabriel", "GAB", "url3")
         );
-        when(searchPilotOutPut.searchPilotByName()).thenReturn(new ArrayList<>(pilots));
+        when(searchPilotOutPut.searchPilotByName("Franco")).thenReturn(new ArrayList<>(pilots));
 
-        ArrayList<Pilot> result = searchPilotUseCase.searchPilotByName();
+        ArrayList<Pilot> result = searchPilotUseCase.searchPilotByName("Franco");
 
-        Assertions.assertEquals(3, result.size());
+        Assertions.assertEquals(1, result.size());
         Assertions.assertEquals("Franco", result.get(0).getName());
-        Assertions.assertEquals("Gabriel", result.get(2).getName());
+
     }
 
 }

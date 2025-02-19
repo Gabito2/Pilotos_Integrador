@@ -15,9 +15,9 @@ public class CreatePilotUseCase implements CreatePilotInput {
     @Override
     public Pilot createPilot(Pilot pilot) {
 
-//        if (createPilotOutPut.existPilotByFullName(pilot.getFullName()) || createPilotOutPut.existPilotByShortName(pilot.getShortName())) {
-//            throw new ExceptionPilot("El piloto ya existe");
-//        }
+        if (createPilotOutPut.existPilotByFullName(pilot.getFullName()) || createPilotOutPut.existPilotByShortName(pilot.getShortName())) {
+            throw new ExceptionPilot("El piloto ya existe");
+        }
 
         return createPilotOutPut.createPiloto(pilot);
     }

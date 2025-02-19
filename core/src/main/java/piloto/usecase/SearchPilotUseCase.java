@@ -5,6 +5,7 @@ import piloto.modelo.Pilot;
 import piloto.output.SearchPilotOutPut;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class SearchPilotUseCase implements SearchPilotInput {
     private SearchPilotOutPut searchPilotOutPut;
@@ -19,18 +20,18 @@ public class SearchPilotUseCase implements SearchPilotInput {
     }
 
     @Override
-    public ArrayList<Pilot> searchPilotByName() {
-        return searchPilotOutPut.searchPilotByName();
+    public ArrayList<Pilot> searchPilotByName(String name) {
+        return new ArrayList<>(searchPilotOutPut.searchPilotByName(name).stream().filter(pilot -> pilot.getName().equals(name)).collect(Collectors.toList()));
     }
 
     @Override
-    public ArrayList<Pilot> searchPilotByShort_name(){
-        return searchPilotOutPut.searchPilotByShort_name();
+    public ArrayList<Pilot> searchPilotByShortName(String shortName) {
+        return new ArrayList<>(searchPilotOutPut.searchPilotByShortName(shortName).stream().filter(pilot -> pilot.getShortName().equals(shortName)).collect(Collectors.toList()));
     }
 
     @Override
-    public ArrayList<Pilot> searchPilotByFull_name(){
-        return searchPilotOutPut.searchPilotByFull_name();
+    public ArrayList<Pilot> searchPilotByFullName(String fullName) {
+        return new ArrayList<>(searchPilotOutPut.searchPilotByFullName(fullName).stream().filter(pilot -> pilot.getFullName().equals(fullName)).collect(Collectors.toList()));
     }
 
 }
