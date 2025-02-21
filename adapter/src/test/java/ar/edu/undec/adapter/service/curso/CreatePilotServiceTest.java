@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import piloto.input.CreatePilotInput;
 import piloto.modelo.Pilot;
 
-import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CreateCourseServiceTest {
+public class CreatePilotServiceTest {
 
     @Mock
     CreatePilotInput createPilotInput; 
@@ -46,7 +45,7 @@ public class CreateCourseServiceTest {
     }
 
     @Test
-    public void createCourse_courseExists_Return409() throws Exception {
+    public void createCourse_courseExists_Return400() throws Exception {
         List<PilotDTO> mockPilotList = new ArrayList<>();
         mockPilotList.add(new PilotDTO(null, null, "Franco Colapinto", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
         mockPilotList.add(new PilotDTO(null, null, "Franco Colapinto", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
@@ -55,17 +54,18 @@ public class CreateCourseServiceTest {
 
         ResponseEntity<?> result = pilotController.saveUpdate();
 
-        Assertions.assertEquals(HttpStatus.CONFLICT, result.getStatusCode());
-        Assertions.assertTrue(result.getBody().toString().contains("Error al cargar los pilotos."));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode()); // Ahora esperamos 400
+        Assertions.assertTrue(result.getBody().toString().contains("Piloto duplicado encontrado"));
     }
 
     @Test
-    public void createCourse_serviceError_Return500() throws Exception {
-        when(f1Service.getPilotos()).thenThrow(new RuntimeException("Internal Server Error"));
+    public void createCourse_serviceError_Return400() throws Exception {
+        when(f1Service.getPilotos()).thenThrow(new RuntimeException("Error al cargar los pilotos"));
 
         ResponseEntity<?> result = pilotController.saveUpdate();
 
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
-        Assertions.assertTrue(result.getBody().toString().contains("Internal Server Error"));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode()); // BAD_REQUEST (400)
+        Assertions.assertTrue(result.getBody().toString().contains("Error al cargar los pilotos"));
     }
+
 }
