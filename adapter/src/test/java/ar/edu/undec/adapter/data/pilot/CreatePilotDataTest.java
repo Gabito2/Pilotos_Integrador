@@ -1,4 +1,4 @@
-package ar.edu.undec.adapter.data.curso;
+package ar.edu.undec.adapter.data.pilot;
 
 import org.example.data.dbAPI.PilotRepository;
 import org.example.data.entity.PilotData;

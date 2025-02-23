@@ -1,4 +1,4 @@
-package ar.edu.undec.adapter.service.curso;
+package ar.edu.undec.adapter.service.pilot;
 
 import org.example.servicios.controller.PilotController;
 import org.example.servicios.domain.PilotDTO;
@@ -32,7 +32,7 @@ public class CreatePilotServiceTest {
     PilotController pilotController;
 
     @Test
-    public void createCourse_courseSaver_Return201() throws Exception {
+    public void createPilot_pilotSave_Return201() throws Exception {
         List<PilotDTO> mockPilotList = new ArrayList<>();
         mockPilotList.add(new PilotDTO(null, null, "Colapinto Franco", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
 
@@ -45,7 +45,7 @@ public class CreatePilotServiceTest {
     }
 
     @Test
-    public void createCourse_courseExists_Return400() throws Exception {
+    public void createPilot_pilotExists_Return400() throws Exception {
         List<PilotDTO> mockPilotList = new ArrayList<>();
         mockPilotList.add(new PilotDTO(null, null, "Franco Colapinto", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
         mockPilotList.add(new PilotDTO(null, null, "Franco Colapinto", "COL", null, null, "Franco", "url", "Colapinto", null, null, null));
@@ -54,17 +54,17 @@ public class CreatePilotServiceTest {
 
         ResponseEntity<?> result = pilotController.saveUpdate();
 
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode()); // Ahora esperamos 400
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         Assertions.assertTrue(result.getBody().toString().contains("Piloto duplicado encontrado"));
     }
 
     @Test
-    public void createCourse_serviceError_Return400() throws Exception {
+    public void createPilot_serviceError_Return400() throws Exception {
         when(f1Service.getPilotos()).thenThrow(new RuntimeException("Error al cargar los pilotos"));
 
         ResponseEntity<?> result = pilotController.saveUpdate();
 
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode()); // BAD_REQUEST (400)
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         Assertions.assertTrue(result.getBody().toString().contains("Error al cargar los pilotos"));
     }
 
